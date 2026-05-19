@@ -1,10 +1,7 @@
-import type { Metadata } from "next";
+"use client";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Blog – AI Tools Guides, Comparisons & Tutorials",
-  description: "Guides, comparisons, and tutorials on the best AI tools. ChatGPT vs Claude, best free AI tools, how to use AI for writing — all covered.",
-};
+
 
 const posts = [
   {

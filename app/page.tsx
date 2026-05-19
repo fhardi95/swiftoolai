@@ -1,10 +1,5 @@
-import type { Metadata } from "next";
+"use client";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-  title: "SwiftToolAI – Free AI Tools Online",
-  description: "Free AI-powered tools for writing, productivity, and content creation. No sign-up needed. Try our text rewriter, bio generator, and grammar checker now.",
-};
 
 const tools = [
   {
