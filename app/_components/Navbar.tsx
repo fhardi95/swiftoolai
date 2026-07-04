@@ -5,6 +5,13 @@ import { useSession, signIn, signOut } from "next-auth/react";
 
 const toolGroups = [
   {
+    label: "AI Chat", icon: "💬",
+    tools: [
+      { href: "/tools/free-ai-chat", label: "Free AI Chat", badge: "New" },
+      { href: "/models/claude-sonnet-4-6", label: "Claude Sonnet 4.6" },
+    ],
+  },
+  {
     label: "AI Image", icon: "🤳",
     tools: [
       { href: "/tools/background-remover", label: "Background Remover", badge: "New" },
