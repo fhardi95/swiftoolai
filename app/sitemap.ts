@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import fs from "fs";
 import path from "path";
+import { BLOG_POSTS } from "./_data/blog-data";
 
 const BASE_URL = "https://www.swiftoolai.com";
 
@@ -98,5 +99,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticPages, ...toolPages];
+  // ─── Blog posts (auto-discovered from BLOG_POSTS — new posts appear on the
+  //     next build with no manual sitemap edits needed, including posts added
+  //     by the daily auto-publish agent) ───────────────────────────────────────
+  const blogPages: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => ({
+    url: `${BASE_URL}/blog/${post.slug}`,
+    lastModified: post.dateISO ? new Date(post.dateISO) : now,
+    changeFrequency: "monthly" as const,
+    priority: post.featured ? 0.7 : 0.6,
+  }));
+
+  return [...staticPages, ...toolPages, ...blogPages];
 }
