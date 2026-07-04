@@ -39,6 +39,16 @@ const toolCategories = [
     ],
   },
   {
+    label: "Relationships & Growth",
+    color: "#db2777",
+    tools: [
+      { href: "/tools/personality-os", icon: "🧠", name: "AI Personality OS", desc: "A 40-question assessment that builds an AI who knows you — ask it about your career, business ideas, or relationships.", badge: "New" },
+      { href: "/tools/situationship-analyser", icon: "💔", name: "Situationship Analyser", desc: "Describe your romantic situation and get an honest AI read — red flags, green flags, advice.", badge: "New" },
+      { href: "/tools/attachment-style-quiz", icon: "🔗", name: "Attachment Style Quiz", desc: "Discover your attachment style and how it shapes your relationships.", badge: "New" },
+      { href: "/tools/aura-colour-generator", icon: "🔮", name: "Aura Colour Generator", desc: "Find your aura colour and what it says about your energy.", badge: "New" },
+    ],
+  },
+  {
     label: "Text & Utility Tools",
     color: "#16a34a",
     tools: [
@@ -70,6 +80,7 @@ const categoryColors: Record<string, { bg: string; border: string; text: string 
   "#7c3aed": { bg: "rgba(124,58,237,0.08)", border: "rgba(124,58,237,0.2)", text: "#7c3aed" },
   "#ef4444": { bg: "rgba(239,68,68,0.08)",  border: "rgba(239,68,68,0.2)",  text: "#ef4444" },
   "#16a34a": { bg: "rgba(22,163,74,0.08)",  border: "rgba(22,163,74,0.2)",  text: "#16a34a" },
+  "#db2777": { bg: "rgba(219,39,119,0.08)", border: "rgba(219,39,119,0.2)", text: "#db2777" },
 };
 
 export default function HomePage() {

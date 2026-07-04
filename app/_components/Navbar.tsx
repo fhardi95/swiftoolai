@@ -40,6 +40,7 @@ const toolGroups = [
   {
     label: "Relationships", icon: "💞",
     tools: [
+      { href: "/tools/personality-os", label: "AI Personality OS", badge: "New" },
       { href: "/tools/situationship-analyser", label: "Situationship Analyser", badge: "New" },
       { href: "/tools/attachment-style-quiz", label: "Attachment Style Quiz", badge: "New" },
       { href: "/tools/aura-colour-generator", label: "Aura Colour Generator", badge: "New" },

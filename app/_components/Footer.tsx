@@ -37,6 +37,7 @@ const FOOTER_COLS = [
   {
     heading: "Relationships & Wellness",
     links: [
+      { href: "/tools/personality-os", label: "AI Personality OS" },
       { href: "/tools/situationship-analyser", label: "Situationship Analyser" },
       { href: "/tools/attachment-style-quiz", label: "Attachment Style Quiz" },
       { href: "/tools/aura-colour-generator", label: "Aura Colour Generator" },
