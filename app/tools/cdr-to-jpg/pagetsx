@@ -1,0 +1,36 @@
+// SERVER COMPONENT — exports metadata (no "use client")
+import type { Metadata } from "next";
+import CdrToJpgClient from "./CdrToJpgClient";
+
+export const metadata: Metadata = {
+  title: "Convert CDR to JPG Free Online — No CorelDRAW Needed | SwiftToolAI",
+  description:
+    "Convert CorelDRAW CDR files to high-quality JPG images instantly in your browser. Choose DPI, quality, and background colour. Free, no sign-up, no software required.",
+  keywords: [
+    "convert CDR to JPG",
+    "CDR to JPEG converter",
+    "CorelDRAW to JPG online",
+    "CDR file converter free",
+    "open CDR without CorelDRAW",
+    "CDR to image online",
+    "CDR JPG free no watermark",
+    "convert CDR file online",
+    "CDR to JPEG 300 DPI",
+    "CorelDRAW file to JPG",
+  ],
+  openGraph: {
+    title: "Free CDR to JPG Converter — No Software Needed | SwiftToolAI",
+    description:
+      "Upload a CorelDRAW CDR file and download a high-quality JPG in seconds. Choose your resolution and quality. Free and private.",
+    url: "https://www.swiftoolai.com/tools/cdr-to-jpg",
+    siteName: "SwiftToolAI",
+    type: "website",
+  },
+  alternates: {
+    canonical: "https://www.swiftoolai.com/tools/cdr-to-jpg",
+  },
+};
+
+export default function CdrToJpgPage() {
+  return <CdrToJpgClient />;
+}
