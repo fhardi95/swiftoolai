@@ -2,6 +2,7 @@ import { MetadataRoute } from "next";
 import fs from "fs";
 import path from "path";
 import { BLOG_POSTS } from "./_data/blog-data";
+import { PROMPTS, PROMPT_CATEGORIES } from "./_data/prompts-data";
 
 const BASE_URL = "https://www.swiftoolai.com";
 
@@ -42,6 +43,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${BASE_URL}/tools`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/prompts`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.9,
@@ -109,5 +116,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: post.featured ? 0.7 : 0.6,
   }));
 
-  return [...staticPages, ...toolPages, ...blogPages];
+  // ─── Prompt category pages ─────────────────────────────────────────────────
+  const promptCategoryPages: MetadataRoute.Sitemap = PROMPT_CATEGORIES.map((cat) => ({
+    url: `${BASE_URL}/prompts/${cat.slug}`,
+    lastModified: now,
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+  }));
+
+  // ─── Individual prompt pages (auto-discovered from PROMPTS — new prompts
+  //     appear on the next build with no manual sitemap edits needed) ─────────
+  const promptPages: MetadataRoute.Sitemap = PROMPTS.map((p) => ({
+    url: `${BASE_URL}/prompts/${p.category}/${p.slug}`,
+    lastModified: new Date(p.dateISO),
+    changeFrequency: "monthly" as const,
+    priority: p.featured ? 0.7 : 0.6,
+  }));
+
+  return [
+    ...staticPages,
+    ...toolPages,
+    ...promptCategoryPages,
+    ...promptPages,
+    ...blogPages,
+  ];
 }

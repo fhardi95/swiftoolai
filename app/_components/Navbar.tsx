@@ -128,6 +128,13 @@ export default function Navbar() {
               )}
             </div>
 
+            {/* Prompts top-level link */}
+            <div>
+              <Link href="/prompts" style={{ fontSize: 14, padding: "6px 12px", borderRadius: "var(--radius-sm)", color: "#6b7280", fontWeight: 500, display: "inline-block" }}>
+                Prompts
+              </Link>
+            </div>
+
             <Link href="/pricing" style={{ fontSize: 14, color: "#6b7280", padding: "6px 12px", borderRadius: "var(--radius-sm)", textDecoration: "none", fontWeight: 500 }}>Pricing</Link>
             <Link href="/blog" style={{ fontSize: 14, color: "#6b7280", padding: "6px 12px", borderRadius: "var(--radius-sm)", textDecoration: "none", fontWeight: 500 }}>Blog</Link>
             <Link href="/about" style={{ fontSize: 14, color: "#6b7280", padding: "6px 12px", borderRadius: "var(--radius-sm)", textDecoration: "none", fontWeight: 500 }}>About</Link>
@@ -239,6 +246,7 @@ export default function Navbar() {
 
             <div style={{ padding: "0 1.25rem 0.5rem", display: "flex", flexDirection: "column" }}>
               <Link href="/pricing" onClick={() => setMobileOpen(false)} style={{ padding: "9px 0", fontSize: 14, fontWeight: 600, color: "#2563eb", textDecoration: "none" }}>Pricing</Link>
+              <Link href="/prompts" onClick={() => setMobileOpen(false)} style={{ padding: "9px 0", fontSize: 14, fontWeight: 500, color: "#374151", textDecoration: "none" }}>Prompts</Link>
               <Link href="/blog" onClick={() => setMobileOpen(false)} style={{ padding: "9px 0", fontSize: 14, fontWeight: 500, color: "#374151", textDecoration: "none" }}>Blog</Link>
               <Link href="/about" onClick={() => setMobileOpen(false)} style={{ padding: "9px 0", fontSize: 14, fontWeight: 500, color: "#374151", textDecoration: "none" }}>About</Link>
               <Link href="/contact" onClick={() => setMobileOpen(false)} style={{ padding: "9px 0", fontSize: 14, fontWeight: 500, color: "#374151", textDecoration: "none" }}>Contact</Link>
