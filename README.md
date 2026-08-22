@@ -27,10 +27,11 @@ git push -u origin main
 3. Framework: Next.js (auto-detected)
 4. Click Deploy
 
-### Step 3 — Add Environment Variable
+### Step 3 — Add Environment Variables
 In Vercel → Settings → Environment Variables:
 ```
-ANTHROPIC_API_KEY = sk-ant-your-key-here
+ANTHROPIC_API_KEY = sk-ant-your-key-here   (used only by the Claude Sonnet 4.6 chat page)
+OPENAI_API_KEY = sk-your-openai-key-here   (used by every other AI tool)
 ```
 
 ### Step 4 — Connect your domain

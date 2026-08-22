@@ -46,18 +46,25 @@ export async function POST(req: NextRequest) {
 
     const { content: blogData, sha: blogDataSha } = await getFile(token, repo, branch, "app/_data/blog-data.ts");
 
-    if (blogData.includes(`slug: "${post.slug}"`)) {
-      return NextResponse.json({ error: `Article "${post.slug}" already exists.` }, { status: 409 });
+    // Auto-dedupe: if the slug exists, append -2, -3, etc. until it's unique
+    let finalSlug = post.slug;
+    let finalTitle = post.title;
+    let suffix = 1;
+    while (blogData.includes(`slug: "${finalSlug}"`)) {
+      suffix += 1;
+      finalSlug = `${post.slug}-${suffix}`;
+      finalTitle = `${post.title} (${suffix})`;
     }
+    const finalPost = { ...post, slug: finalSlug, title: finalTitle };
 
-    const serialised = JSON.stringify(post, null, 2);
+    const serialised = JSON.stringify(finalPost, null, 2);
     const insertMarker = "export const BLOG_POSTS: BlogPost[] = [";
     if (!blogData.includes(insertMarker)) {
       return NextResponse.json({ error: "Could not find BLOG_POSTS array in blog-data.ts" }, { status: 500 });
     }
 
     const updatedBlogData = blogData.replace(insertMarker + "\n", `${insertMarker}\n  ${serialised},\n`);
-    await updateFile(token, repo, branch, "app/_data/blog-data.ts", updatedBlogData, blogDataSha, `feat: add article "${post.title}" [AI Agent]`);
+    await updateFile(token, repo, branch, "app/_data/blog-data.ts", updatedBlogData, blogDataSha, `feat: add article "${finalPost.title}" [AI Agent]`);
 
     let deployTriggered = false;
     const deployHook = process.env.VERCEL_DEPLOY_HOOK;
@@ -70,9 +77,10 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      slug: post.slug,
+      slug: finalPost.slug,
+      renamedFromDuplicate: finalSlug !== post.slug,
       deployTriggered,
-      liveUrl: `https://www.swiftoolai.com/blog/${post.slug}`,
+      liveUrl: `https://www.swiftoolai.com/blog/${finalPost.slug}`,
     });
   } catch (err) {
     return NextResponse.json({ error: err instanceof Error ? err.message : "Internal server error" }, { status: 500 });

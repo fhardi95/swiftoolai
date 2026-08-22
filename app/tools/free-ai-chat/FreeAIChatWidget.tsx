@@ -40,7 +40,7 @@ export default function FreeAIChatWidget() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: newMessages.filter((m) => m.role !== "assistant" || newMessages.indexOf(m) > 0),
-          model: "claude-sonnet-4-6",
+          model: "gpt-5-mini",
         }),
       });
       const data = await res.json();

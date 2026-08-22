@@ -120,18 +120,19 @@ async function updateGithubFile(token: string, repo: string, branch: string, fil
 }
 
 async function generateArticle(apiKey: string, topic: string, monthYear: string): Promise<Record<string, unknown> | null> {
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
+      "Authorization": `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 6000,
-      system: ARTICLE_SYSTEM_PROMPT,
+      model: "gpt-5-mini",
+      max_completion_tokens: 6000,
       messages: [{
+        role: "system",
+        content: ARTICLE_SYSTEM_PROMPT,
+      }, {
         role: "user",
         content: `Write a complete SEO-optimised article for swiftoolai.com about: ${topic}. Today's date is ${monthYear}. Output ONLY raw JSON starting with { and ending with }.`,
       }],
@@ -139,10 +140,7 @@ async function generateArticle(apiKey: string, topic: string, monthYear: string)
   });
 
   const data = await res.json();
-  const text = data.content
-    ?.filter((b: { type: string }) => b.type === "text")
-    .map((b: { text: string }) => b.text)
-    .join("\n") ?? "";
+  const text = data.choices?.[0]?.message?.content ?? "";
 
   const stripped = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
   const match = stripped.match(/\{[\s\S]*"slug"[\s\S]*"content"[\s\S]*\}/);
@@ -184,7 +182,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY;
   const token = process.env.GITHUB_TOKEN;
   const repo = process.env.GITHUB_REPO;
   const branch = process.env.GITHUB_BRANCH || "main";
@@ -196,6 +194,8 @@ export async function POST(req: NextRequest) {
   const now = new Date();
   const year = now.getFullYear();
   const monthYear = now.toLocaleString("en-GB", { month: "long", year: "numeric" });
+  const todayDisplay = now.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  const todayISO = now.toISOString().split("T")[0];
   const AUTO_TOPICS = BASE_TOPICS.map(t => `${t} ${year}`);
 
   const topic = AUTO_TOPICS[Math.floor(Math.random() * AUTO_TOPICS.length)];
@@ -206,6 +206,12 @@ export async function POST(req: NextRequest) {
     if (!post) {
       results.push({ topic, success: false, error: "Failed to generate article" });
     } else {
+      // Always override whatever date the model produced — giving it only
+      // "July 2026" and letting it invent a day + calculate the ISO date
+      // itself is unreliable (it tends to default to the 15th). Compute
+      // the real date in code instead.
+      post.date = todayDisplay;
+      post.dateISO = todayISO;
       const publishResult = await publishArticle(token, repo, branch, post);
       results.push({ topic, slug: post.slug as string, ...publishResult });
     }

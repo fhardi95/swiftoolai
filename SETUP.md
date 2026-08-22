@@ -57,6 +57,7 @@ NEXTAUTH_URL=http://localhost:3000
 GOOGLE_CLIENT_ID=<from_google_console>
 GOOGLE_CLIENT_SECRET=<from_google_console>
 ANTHROPIC_API_KEY=<your_existing_key>
+OPENAI_API_KEY=<your_openai_key>
 ```
 
 ---
@@ -71,7 +72,8 @@ In your Vercel dashboard → Project Settings → Environment Variables, add:
 | NEXTAUTH_URL | https://www.swiftoolai.com |
 | GOOGLE_CLIENT_ID | (from Google Console) |
 | GOOGLE_CLIENT_SECRET | (from Google Console) |
-| ANTHROPIC_API_KEY | (existing key) |
+| ANTHROPIC_API_KEY | (existing key — Claude Sonnet 4.6 page only) |
+| OPENAI_API_KEY | (new — used by every other AI tool) |
 
 ---
 

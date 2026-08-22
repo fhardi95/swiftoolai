@@ -23,29 +23,28 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing imageBase64 or mediaType" }, { status: 400 });
     }
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
-      return NextResponse.json({ error: "❌ ANTHROPIC_API_KEY is missing from environment variables." }, { status: 500 });
+      return NextResponse.json({ error: "❌ OPENAI_API_KEY is missing from environment variables." }, { status: 500 });
     }
 
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
+        "Authorization": `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 1024,
-        system: SYSTEM_PROMPT,
+        model: "gpt-5-mini",
+        max_completion_tokens: 1024,
         messages: [
+          { role: "system", content: SYSTEM_PROMPT },
           {
             role: "user",
             content: [
               {
-                type: "image",
-                source: { type: "base64", media_type: mediaType, data: imageBase64 },
+                type: "image_url",
+                image_url: { url: `data:${mediaType};base64,${imageBase64}` },
               },
               {
                 type: "text",
@@ -61,11 +60,11 @@ export async function POST(req: NextRequest) {
 
     if (!res.ok) {
       const msg = data?.error?.message || JSON.stringify(data);
-      console.error("Anthropic error:", msg);
+      console.error("OpenAI error:", msg);
       return NextResponse.json({ error: `API error (${res.status}): ${msg}` }, { status: 502 });
     }
 
-    const raw = data.content?.[0]?.text || "";
+    const raw = data.choices?.[0]?.message?.content || "";
     const clean = raw.replace(/```json|```/gi, "").trim();
 
     let parsed;

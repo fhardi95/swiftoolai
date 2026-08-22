@@ -207,15 +207,17 @@ export default function AgentClient() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            model: "claude-haiku-4-5-20251001",
-            max_tokens: 6000,
-            system: ARTICLE_SYSTEM_PROMPT,
-            messages: [{ role: "user", content: `Write a complete SEO article for swiftoolai.com about: ${topics[i]}. Date: ${monthYear}. Output ONLY raw JSON.` }],
+            model: "gpt-5-mini",
+            max_completion_tokens: 6000,
+            messages: [
+              { role: "system", content: ARTICLE_SYSTEM_PROMPT },
+              { role: "user", content: `Write a complete SEO article for swiftoolai.com about: ${topics[i]}. Date: ${monthYear}. Output ONLY raw JSON.` },
+            ],
           }),
         });
 
         const data = await res.json();
-        const text = data.content?.filter((b: { type: string }) => b.type === "text").map((b: { text: string }) => b.text).join("\n") ?? "";
+        const text = data.choices?.[0]?.message?.content ?? "";
         const post = tryParsePost(text);
 
         if (!post) { addLog(`⚠️ Article ${i + 1} — JSON parse failed.`); continue; }
@@ -260,11 +262,15 @@ export default function AgentClient() {
       const res = await fetch("/api/agent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ model: "claude-haiku-4-5-20251001", max_tokens: 6000, system: ARTICLE_SYSTEM_PROMPT, messages: newHistory }),
+        body: JSON.stringify({
+          model: "gpt-5-mini",
+          max_completion_tokens: 6000,
+          messages: [{ role: "system", content: ARTICLE_SYSTEM_PROMPT }, ...newHistory],
+        }),
       });
 
       const data = await res.json();
-      const text = data.content?.filter((b: { type: string }) => b.type === "text").map((b: { text: string }) => b.text).join("\n") ?? "No response.";
+      const text = data.choices?.[0]?.message?.content ?? "No response.";
       const parsedPost = tryParsePost(text);
 
       setMessages(prev => [...prev, {

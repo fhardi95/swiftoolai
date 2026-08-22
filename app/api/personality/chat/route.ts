@@ -54,24 +54,22 @@ ${profile.digest}
 
 Use this profile to give tailored, specific advice — reference their actual traits and tendencies rather than generic advice anyone could get. Be direct, warm, and genuinely useful. Keep responses focused and conversational (2-5 short paragraphs max unless they ask for something longer like a full plan).`;
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ error: "AI service is not configured." }, { status: 500 });
   }
 
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
+        "Authorization": `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 1024,
-        system: systemPrompt,
-        messages: [...history, { role: "user", content: message }],
+        model: "gpt-5-mini",
+        max_completion_tokens: 1024,
+        messages: [{ role: "system", content: systemPrompt }, ...history, { role: "user", content: message }],
       }),
     });
 
@@ -80,7 +78,7 @@ Use this profile to give tailored, specific advice — reference their actual tr
       return NextResponse.json({ error: `API error: ${data?.error?.message || "Unknown error"}` }, { status: 502 });
     }
 
-    const reply = data.content?.[0]?.text || "Sorry, I couldn't generate a response.";
+    const reply = data.choices?.[0]?.message?.content || "Sorry, I couldn't generate a response.";
 
     const updatedHistory = [
       ...history,

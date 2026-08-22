@@ -62,24 +62,22 @@ export async function POST(req: NextRequest) {
     .map((key) => `${TRAIT_LABELS[key].label}: ${traitScores[key]}/100 (leans ${traitScores[key] >= 50 ? TRAIT_LABELS[key].high : TRAIT_LABELS[key].low})`)
     .join("\n");
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ error: "AI service is not configured." }, { status: 500 });
   }
 
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
+        "Authorization": `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 2048,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: "user", content: `Here are this user's trait scores:\n\n${traitSummaryLines}` }],
+        model: "gpt-5-mini",
+        max_completion_tokens: 2048,
+        messages: [{ role: "system", content: SYSTEM_PROMPT }, { role: "user", content: `Here are this user's trait scores:\n\n${traitSummaryLines}` }],
       }),
     });
 
@@ -88,7 +86,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: `API error: ${data?.error?.message || "Unknown error"}` }, { status: 502 });
     }
 
-    const raw = data.content?.[0]?.text || "";
+    const raw = data.choices?.[0]?.message?.content || "";
     const clean = raw.replace(/```json|```/gi, "").trim();
 
     let report;
