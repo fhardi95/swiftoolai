@@ -14,7 +14,8 @@ const toolGroups = [
   {
     label: "AI Image", icon: "🤳",
     tools: [
-      { href: "/tools/background-remover", label: "Background Remover", badge: "New" },
+      { href: "/tools/ai-media-generator", label: "AI Image & Video Generator", badge: "New" },
+      { href: "/tools/background-remover", label: "Background Remover" },
       { href: "/tools/ai-face-rater", label: "AI Face Rater" },
       { href: "/tools/image-compressor", label: "Image Compressor" },
       { href: "/tools/webp-to-jpg", label: "WebP to JPG" },
